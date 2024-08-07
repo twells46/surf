@@ -1,11 +1,11 @@
 /* modifier 0 means no modifier */
 static int surfuseragent    = 1;  /* Append Surf version to default WebKit user agent */
-static char *fulluseragent  = ""; /* Or override the whole user agent string */
-static char *scriptfile     = "~/.surf/script.js";
-static char *styledir       = "~/.surf/styles/";
-static char *certdir        = "~/.surf/certificates/";
-static char *cachedir       = "~/.surf/cache/";
-static char *cookiefile     = "~/.surf/cookies.txt";
+static char *fulluseragent  = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/115.0"; /* Or override the whole user agent string */
+static char *scriptfile     = "~/.local/share/surf/script.js";
+static char *styledir       = "~/.local/share/surf/styles/";
+static char *certdir        = "~/.local/share/surf/certificates/";
+static char *cachedir       = "~/.local/share/surf/cache/";
+static char *cookiefile     = "~/.local/share/surf/cookies.txt";
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -46,7 +46,7 @@ static Parameter defconfig[ParameterLast] = {
 	[Style]               =       { { .i = 1 },     },
 	[WebGL]               =       { { .i = 0 },     },
 	[ZoomLevel]           =       { { .f = 1.0 },   },
-	[ClipboardNotPrimary] =				{ { .i = 1 },			},
+	[ClipboardNotPrimary] =	      { { .i = 1 },	},
 };
 
 static UriParameters uriparams[] = {
@@ -77,6 +77,15 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 }
 
 /* DOWNLOAD(URI, referer) */
+#define DOWNLOAD(d, r) { \
+	.v = (const char *[]){ "st", "-e", "/bin/sh", "-c",\
+                "aria2c -U \"$1\" -d \"/tmp\" -x 2" \
+		" --referer \"$2\" --load-cookies \"$3\" --save-cookies \"$3\" \"$0\"; sleep 4;", \
+		d, useragent, r, cookiefile, NULL \
+	} \
+}
+
+/*
 #define DOWNLOAD(u, r) { \
         .v = (const char *[]){ "st", "-e", "/bin/sh", "-c",\
              "curl -g -L -J -O -A \"$1\" -b \"$2\" -c \"$2\"" \
@@ -84,6 +93,7 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
              "surf-download", useragent, cookiefile, r, u, NULL \
         } \
 }
+*/
 
 /* PLUMB(URI) */
 /* This called when some URI which does not begin with "about:",
@@ -91,7 +101,7 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
  */
 #define PLUMB(u) {\
         .v = (const char *[]){ "/bin/sh", "-c", \
-             "xdg-open \"$0\"", u, NULL \
+             "linkhandler dmenu \"$0\"", u, NULL \
         } \
 }
 
@@ -99,6 +109,14 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define VIDEOPLAY(u) {\
         .v = (const char *[]){ "/bin/sh", "-c", \
              "mpv --really-quiet \"$0\"", u, NULL \
+        } \
+}
+
+/* BOOKMARK(URL) */
+#define BOOKMARK_CMD {\
+        .v = (const char *[]){ "/bin/sh", "-c",\
+            "surf-get-url $0 | save-bookmark", \
+            winid, NULL \
         } \
 }
 
@@ -176,6 +194,7 @@ static Key keys[] = {
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_s,      toggle,     { .i = JavaScript } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_i,      toggle,     { .i = LoadImages } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
+	{ MODKEY,                GDK_KEY_m,      spawn,      BOOKMARK_CMD },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_m,      toggle,     { .i = Style } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_d,      toggle,     { .i = DarkMode } },

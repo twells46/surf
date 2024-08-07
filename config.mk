@@ -24,7 +24,7 @@ LIBS = $(X11LIB) $(GTKLIB) -lgthread-2.0
 # flags
 CPPFLAGS = -DVERSION=\"$(VERSION)\" -DGCR_API_SUBJECT_TO_CHANGE \
            -DLIBPREFIX=\"$(LIBPREFIX)\" -DWEBEXTDIR=\"$(LIBDIR)\" \
-           -D_DEFAULT_SOURCE
+           -D_DEFAULT_SOURCE -O2 -march=haswell -pipe
 SURFCFLAGS = -fPIC $(INCS) $(CPPFLAGS)
 WEBEXTCFLAGS = -fPIC $(WEBEXTINC)
 
