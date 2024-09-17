@@ -1083,6 +1083,9 @@ destroyclient(Client *c)
 void
 cleanup(void)
 {
+	if (fork() == 0)
+		execlp("rm", "rm", "-r", "-f", "/tmp/surf", (char *) NULL);
+
 	while (clients)
 		destroyclient(clients);
 
@@ -1093,6 +1096,7 @@ cleanup(void)
 	g_free(stylefile);
 	g_free(cachedir);
 	XCloseDisplay(dpy);
+	wait(NULL);
 }
 
 WebKitWebView *

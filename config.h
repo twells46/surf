@@ -1,11 +1,11 @@
 /* modifier 0 means no modifier */
-static int surfuseragent    = 1;  /* Append Surf version to default WebKit user agent */
+static int surfuseragent    = 0;  /* Append Surf version to default WebKit user agent */
 static char *fulluseragent  = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/115.0"; /* Or override the whole user agent string */
-static char *scriptfile     = "~/.local/share/surf/script.js";
-static char *styledir       = "~/.local/share/surf/styles/";
-static char *certdir        = "~/.local/share/surf/certificates/";
-static char *cachedir       = "~/.local/share/surf/cache/";
-static char *cookiefile     = "~/.local/share/surf/cookies.txt";
+static char *scriptfile     = "/tmp/surf/script.js";
+static char *styledir       = "/tmp/surf/styles/";
+static char *certdir        = "/tmp/surf/certificates/";
+static char *cachedir       = "/tmp/surf/cache/";
+static char *cookiefile     = "/tmp/surf/cookies.txt";
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -30,7 +30,7 @@ static Parameter defconfig[ParameterLast] = {
 	[Geolocation]         =       { { .i = 0 },     },
 	[HideBackground]      =       { { .i = 0 },     },
 	[Inspector]           =       { { .i = 0 },     },
-	[JavaScript]          =       { { .i = 1 },     },
+	[JavaScript]          =       { { .i = 0 },     },
 	[KioskMode]           =       { { .i = 0 },     },
 	[LoadImages]          =       { { .i = 1 },     },
 	[MediaManualPlay]     =       { { .i = 1 },     },
